@@ -7,9 +7,118 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script type="module" src="index.js"></script>
+    <!-- <script type="module" src="index.js"></script> -->
 </head>
+<style>
+    body
+    {
+        --white: #ddd;
 
+        --gray-dark: #363636;
+        --gray-mid: #4d4d4d;
+        --gray-light: #a9a9a9;
+
+        --black-light: #333;
+
+        --blue: rgb(44, 108, 182);
+
+        -ms-text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%;
+        color: #24292e;
+        line-height: 1.5;
+        font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
+        font-size: 16px;
+        line-height: 1.5;
+        word-wrap: break-word;
+        color: var(--black-light);
+    }
+    h1, h2, h3
+    {
+        border-bottom: solid 1px var(--gray-light);
+        margin-top: 0;
+    }
+    input, select
+    {
+        font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
+        font-size: 16px;
+        border: solid 1px var(--gray-light);
+        padding: .2em .5em;
+        background-color: var(--gray-mid);
+        color: var(--gray-light);
+        border-radius: 3px;
+        flex: 1;
+    }
+    input:focus, input:active, select:focus, select:active
+    {
+        outline: none;
+        border-color: var(--blue);
+    }
+    button
+    {
+        background: none;
+        border: solid 1px var(--white);
+        color: var(--white);
+        cursor:pointer;
+        font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
+        font-size: 16px;
+    }
+    button:hover
+    {
+        background-color: var(--gray-mid);
+    }
+    ul
+    {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    textarea
+    {
+        resize: vertical;
+        overflow-y: auto;
+        flex: 1;
+    }
+    main
+    {
+        max-width:1140px;
+        margin: 2em auto;
+        display:flex;
+        border: solid 1px var(--gray-dark);
+        box-shadow: 0 0 20px 2px rgba(0,0,0, .1);
+    }
+    main > div
+    {
+        display: flex;
+        flex-direction: column;
+        padding: 1em;
+    }
+    main label
+    {
+        display:block;
+    }
+    main .input
+    {
+        background: var(--gray-dark);
+        color: var(--gray-light);
+    }
+    main .result
+    {
+        flex: 1;
+    }
+    main .field-group
+    {
+        margin-bottom: 1em;
+    }
+    main .field-group .content
+    {
+        display: flex;
+    }
+    footer
+    {
+        max-width: 1024px;
+        margin: 1em auto;
+    }
+</style>
 <body>
     <header>
         <div class="branding">
@@ -17,24 +126,159 @@
         </div>
         <div class="version">
             <span class="title">Version</span>
-            <span class="value" id="version-value"></span>
+            <span class="value" id="version-value">1.0.0</span>
         </div>
     </header>
     <main>
-        <div><input class="to-log" type="text" /><select class="type"></select><button class="log">Add</button></div>
-        <div><ul class="listening"></ul></div>
-        <div><textarea class="output"></textarea></div>
+        <div class="input log-section">
+            <h3>Log</h3>
+            <label class="field-group subject">
+                <div class="title">
+                    Subject to log to:
+                </div>
+                <div class="content">
+                    <select class="type"></select>
+                </div>
+            </label>
+            <label class="field-group text-value">
+                <div class="title">
+                    Text to log:
+                </div>
+                <div class="content">
+                    <input class="to-log" type="text" />
+                </div>
+            </label>
+            <button class="log">Log</button>
+        </div>
+        <div class="input">
+            <h3>Subjects</h3>
+            <ul class="listening"></ul>
+        </div>
+        <div class="result"><textarea class="output"></textarea></div>
     </main>
     <footer>
-        <div class="disclaimer">
-            
-        </div>
         <div class="copyright">
-            Application, design and images <br>
-            © Cynic, 2019<br>
-            All Rights Reserved
+            <h4>Subject Log is shared under the MIT License</h4>
+            <p>MIT License</p>
+
+            <p>Copyright (c) 2019 1076</p>
+
+            <p>Permission is hereby granted, free of charge, to any person obtaining a copy
+            of this software and associated documentation files (the "Software"), to deal
+            in the Software without restriction, including without limitation the rights
+            to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+            copies of the Software, and to permit persons to whom the Software is
+            furnished to do so, subject to the following conditions:</p>
+
+            <p>The above copyright notice and this permission notice shall be included in all
+            copies or substantial portions of the Software.</p>
+
+            <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+            IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+            FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+            AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+            LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+            OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+            SOFTWARE.</p>
         </div>
     </footer>
+    <script type="module">
+        class SubjectLog{static get logStates(){return null==window.__subjectLogStates__&&(window.__subjectLogStates__={silent:!1}),window.__subjectLogStates__}static get logPrefix(){return window.__subjectLogPrefix__||""}static set logPrefix(t){window.__subjectLogPrefix__=t}static createSubjects(t,e){let o=_sanitizeLogSubjects(t);null!=e&&(SubjectLog.logPrefix=e);for(let t=0;t<o.length;t++){let e=o[t];Object.defineProperty(console.log,e,{get(){if(1==SubjectLog.logStates.silent)return function(){};let t=SubjectLog.logPrefix.replace(/%subject/g,e);if(!0===SubjectLog.logStates.all)return Function.prototype.bind.call(console.log,console,t);let o=SubjectLog.logStates[e.toLowerCase()];return null==o?(console.warn(`Unknown log subject provided: ${e}`),function(){}):0==o?function(){}:Function.prototype.bind.call(console.log,console,t)}}),SubjectLog.logStates[e]="all"!==e}}static setSubjectState(t,e){SubjectLog.logStates[t]=!0===e}};function _sanitizeLogSubjects(t){if(null==t)return[];if(!Array.isArray(t)){if("[object String]"===Object.prototype.toString.call(t))throw new Error("The logSubjects must be an array of strings.");t=[t]}return t.map(t=>{if("[object String]"!==Object.prototype.toString.call(t))throw new Error('All log subjects must be of the type "string".');return t.toLowerCase()}),-1==t.indexOf("all")&&t.unshift("all"),t}
+
+        let $toLog = document.querySelector('input.to-log');
+        let $type = document.querySelector('select.type');
+        let $log = document.querySelector('button.log');
+        let $listening = document.querySelector('ul.listening');
+        let $output = document.querySelector('textarea.output');
+
+        //Startup
+        document.addEventListener('DOMContentLoaded', Document_OnContentLoaded);
+        function Document_OnContentLoaded()
+        {
+            document.removeEventListener('DOMContentLoaded', Document_OnContentLoaded);
+
+            let subjects = ['records', 'reports', 'accounting', 'human resources'];
+            SubjectLog.createSubjects(subjects, '%subject:');
+
+            let inner = '';
+            let checkboxes = '';
+            for(let i = 0; i < subjects.length; i++)
+            {
+                let subject = subjects[i];
+                if(subject != 'all')
+                {
+                    inner += `<option value="${subject}">${subject.charAt(0).toUpperCase() + subject.slice(1)}</option>`;
+                }
+                checkboxes += `<li><label><input type="checkbox" name="subjects" value="${subject}" />${subject.charAt(0).toUpperCase() + subject.slice(1)}</label></li>`;
+            }
+            inner = `<option value="none">None</option>${inner}`;
+            $type.innerHTML = inner;
+
+            $listening.innerHTML = `<li><label><input type="checkbox" name="subjects" value="silent" />Silent</label></li>${checkboxes}`;
+
+            $log.addEventListener('click', log_onClick);
+
+            [].map.call($listening.querySelectorAll('input[type="checkbox"]'), ($checkbox) =>
+            {
+                $checkbox.checked = SubjectLog.logStates[$checkbox.value];
+                $checkbox.addEventListener('change', logState_onChange);
+            });
+        }
+
+        function log_onClick(event)
+        {
+            if($type.value == 'none')
+            {
+                console.log($toLog.value);
+                showLog(null, $toLog.value);
+                return;
+            }
+
+            console.log[$type.value]($toLog.value);
+            showLog($type.value, $toLog.value);
+        }
+
+        function logState_onChange(event)
+        {
+            let subject = event.currentTarget.value;
+            // either method works. setSubjectLogging is just a helper function.
+            // SubjectLog.logStates[subject] = event.currentTarget.checked;
+            SubjectLog.setSubjectState(subject, event.currentTarget.checked);
+        }
+
+        //helper function to display the log in the page.
+        function showLog(subject, value)
+        {
+            if(SubjectLog.logStates.silent == true && subject != null) { return; }
+
+            if(subject == null)
+            {
+                subject = '';
+                $output.innerHTML += `${value}\r\n`;
+                return;
+            }
+
+            let prefix = SubjectLog.logPrefix.replace(/%subject/g, subject);
+            if(SubjectLog.logStates.all === true)
+            {
+                $output.innerHTML += `${prefix} ${value}\r\n`;
+            }
+
+            let gate = SubjectLog.logStates[subject.toLowerCase()];
+            if(gate == null)
+            {
+                console.warn(`Unknown log subject provided: ${subject}`);
+                return;
+            }
+
+            if(gate == false)
+            {
+                return;
+            }
+
+            $output.innerHTML += `${prefix} ${value}\r\n`;
+        }
+    </script>
 </body>
 
 </html>
